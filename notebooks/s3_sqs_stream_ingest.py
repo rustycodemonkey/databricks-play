@@ -7,7 +7,7 @@ dbutils.fs.mount("s3a://mypersonaldumpingground", "/mnt/bucket")
 
 # COMMAND ----------
 
-dbutils.fs.ls("/mnt/bucket/vehicle_position/20190731/12")
+dbutils.fs.ls("/mnt/bucket/vehicle_position/20190802/15")
 
 # COMMAND ----------
 
@@ -30,7 +30,8 @@ demo_bus_rain_df = spark.readStream \
   .schema(demo_bus_rain_schema) \
   .load()
 
+noAggDF = demo_bus_rain_df.select("a")
 
 # COMMAND ----------
 
-demo_bus_rain_df.writeStream.format("console").start()
+noAggDF.writeStream.format("console").start()
