@@ -17,15 +17,15 @@ dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 
 # COMMAND ----------
 
-# Flattens the first level of JSON line into two columns, body and headers
-%sql
-DROP TABLE IF EXISTS json_input;
-CREATE TEMPORARY TABLE json_input
-  USING JSON
-    OPTIONS (
-      path "/mnt/bucket/vehicle_position/20190815/19",
-      multiline true
-    )
+# MAGIC %sql
+# MAGIC -- Flattens the first level of JSON line into two columns, body and headers
+# MAGIC DROP TABLE IF EXISTS json_input;
+# MAGIC CREATE TEMPORARY TABLE json_input
+# MAGIC   USING JSON
+# MAGIC     OPTIONS (
+# MAGIC       path "/mnt/bucket/vehicle_position/20190815/19",
+# MAGIC       multiline true
+# MAGIC     )
 
 # COMMAND ----------
 
@@ -55,7 +55,12 @@ CREATE TEMPORARY TABLE json_input
 
 # COMMAND ----------
 
-dbutils.fs.ls("/");
+dbutils.fs.ls("/delta/json_raw")
+
+# COMMAND ----------
+
+#display(dbutils.fs)
+dbutils.fs.rm("/delta/json_raw", True)
 
 # COMMAND ----------
 
@@ -111,4 +116,20 @@ dbutils.fs.ls("/");
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SHOW CREATE TABLE json_staging
+# MAGIC SHOW CREATE TABLE json_raw
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- Need to look at this cell
+# MAGIC MERGE INTO jsonRaw
+# MAGIC USING (SELECT * FROM 
+# MAGIC           (SELECT jsonStaging.*, RANK() OVER (PARTITION BY ID ORDER BY TIMESTAMP DESC) AS RNK FROM jsonStaging) R where R.rnk = 1) rankedStaging
+# MAGIC ON jsonRaw.id = rankedStaging.id and rankedStaging.rnk = 1
+# MAGIC WHEN MATCHED and rankedStaging.timestamp > jsonRaw.timestamp  THEN
+# MAGIC   UPDATE SET *
+# MAGIC WHEN NOT MATCHED
+# MAGIC   THEN INSERT *
+
+# COMMAND ----------
+
