@@ -122,12 +122,12 @@ dbutils.fs.rm("/delta/json_raw", True)
 
 # MAGIC %sql
 # MAGIC -- Need to look at this cell
-# MAGIC MERGE INTO jsonRaw
+# MAGIC MERGE INTO json_raw
 # MAGIC USING (SELECT * FROM 
-# MAGIC           (SELECT jsonStaging.*, RANK() OVER (PARTITION BY ID ORDER BY TIMESTAMP DESC) AS RNK FROM jsonStaging) R where R.rnk = 1) rankedStaging
-# MAGIC ON jsonRaw.id = rankedStaging.id and rankedStaging.rnk = 1
-# MAGIC WHEN MATCHED and rankedStaging.timestamp > jsonRaw.timestamp  THEN
-# MAGIC   UPDATE SET *
+# MAGIC           (SELECT json_staging.*, RANK() OVER (PARTITION BY id ORDER BY ingested_dt DESC) AS rnk FROM json_staging) R where R.rnk = 1) ranked_json_staging
+# MAGIC ON json_raw.id = ranked_json_staging.id AND ranked_json_staging.rnk = 1
+# MAGIC WHEN MATCHED AND ranked_json_staging.ingested_dt > json_raw.ingested_dt  THEN
+# MAGIC   UPDATE SET headers = ranked_json_staging.headers, body = ranked_json_staging.body, ingested_dt = ranked_json_staging.ingested_dt
 # MAGIC WHEN NOT MATCHED
 # MAGIC   THEN INSERT *
 
