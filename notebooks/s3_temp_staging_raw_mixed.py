@@ -13,7 +13,7 @@ dbutils.fs.ls("s3a://mypersonaldumpingground/")
 
 # COMMAND ----------
 
-dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
+dbutils.fs.ls("/mnt/bucket/vehicle_position_mixed/20190815/19")
 
 # COMMAND ----------
 
@@ -23,7 +23,7 @@ dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 # MAGIC CREATE TEMPORARY TABLE json_input
 # MAGIC   USING JSON
 # MAGIC     OPTIONS (
-# MAGIC       path "/mnt/bucket/vehicle_position/20190815/19"
+# MAGIC       path "/mnt/bucket/vehicle_position_mixed/20190815/19"
 # MAGIC     )
 
 # COMMAND ----------
@@ -56,7 +56,7 @@ dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 # MAGIC CREATE TABLE json_staging
 # MAGIC   USING PARQUET
 # MAGIC   OPTIONS (
-# MAGIC     path "/mnt/bucket/vehicle_position_staging/20190815/19"
+# MAGIC     path "/mnt/bucket/vehicle_position_mixed_staging/20190815/19"
 # MAGIC   )
 # MAGIC   AS SELECT body.id AS rec_id, from_unixtime(body.vehicle.timestamp, "y-MM-dd'T'hh:mm:ss.SSSZZZZ") AS tstamp, current_timestamp() AS ingested_dt, headers, body FROM json_input;
 
