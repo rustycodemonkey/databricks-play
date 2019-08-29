@@ -39,6 +39,14 @@ dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC -- vehpos_p2.1565860721733.json
+# MAGIC -- 40287_17275143_2454_691_1
+# MAGIC -- {"headers": {"timestamp": "1565860712", "host": "ip-192-168-10-100.ap-southeast-2.compute.internal"}, "body": {"id": "40287_17275143_2454_691_1", "vehicle": {"trip": {"trip_id": "984502", "start_time": "19:15:00", "start_date": "20190815", "schedule_relationship": "SCHEDULED", "route_id": "2454_691"}, "position": {"latitude": -33.743263244628906, "longitude": 150.6097869873047, "bearing": 127.0, "speed": 0.0}, "timestamp": "1565860712", "congestion_level": "UNKNOWN_CONGESTION_LEVEL", "vehicle": {"id": "40287_17275143_2454_691_1"}, "occupancy_status": "MANY_SEATS_AVAILABLE"}}}
+# MAGIC SELECT * FROM json_input WHERE body.id = '40287_17275143_2454_691_1' ORDER BY body.vehicle.timestamp DESC LIMIT 1
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC SELECT body.id AS rec_id, from_unixtime(body.vehicle.timestamp, "y-MM-dd'T'hh:mm:ss.SSSZZZZ") AS tstamp, current_timestamp() AS ingested_dt FROM json_input LIMIT 5
 
 # COMMAND ----------
