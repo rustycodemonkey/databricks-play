@@ -52,12 +52,8 @@ dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DROP TABLE IF EXISTS json_staging;
-# MAGIC CREATE TABLE json_staging
-# MAGIC   USING PARQUET
-# MAGIC   OPTIONS (
-# MAGIC     path "/mnt/bucket/vehicle_position_staging/20190815/19"
-# MAGIC   )
+# MAGIC DROP VIEW IF EXISTS json_staging;
+# MAGIC CREATE TEMPORARY VIEW json_staging
 # MAGIC   AS SELECT body.id AS rec_id, from_unixtime(body.vehicle.timestamp, "y-MM-dd'T'hh:mm:ss.SSSZZZZ") AS tstamp, current_timestamp() AS ingested_dt, headers, body FROM json_input;
 
 # COMMAND ----------
