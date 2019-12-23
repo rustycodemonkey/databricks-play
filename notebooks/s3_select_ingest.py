@@ -8,12 +8,12 @@ dbutils.fs.mounts()
 
 # COMMAND ----------
 
-dbutils.fs.ls("/mnt/bucket/vehicle_position/20190814/16")
+dbutils.fs.ls("/mnt/bucket/vehicle_position/20190815/19")
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC /databricks/python/bin/pip list --outdated
+# MAGIC /databricks/python3/bin/pip list --outdated
 
 # COMMAND ----------
 
@@ -31,14 +31,19 @@ dbutils.library.list()
 
 # COMMAND ----------
 
-#dbutils.library.installPyPI('boto3', version="1.9.208")
-#dbutils.library.installPyPI('botocore', version="1.12.208")
+#dbutils.library.installPyPI('boto3', version="1.10.44")
+#dbutils.library.installPyPI('botocore', version="1.13.44")
 #dbutils.library.restartPython()
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC /databricks/python/bin/pip list --outdated
+# MAGIC /databricks/python/bin/pip list
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC /databricks/python/bin/pip install -U pip setuptools boto3 numpy pandas scikit-learn scipy
 
 # COMMAND ----------
 
